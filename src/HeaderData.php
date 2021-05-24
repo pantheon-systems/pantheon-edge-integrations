@@ -46,7 +46,7 @@ class HeaderData {
    *   Key for the header.
    */
   public function getHeader($key): string {
-    return !empty($this->headers[$key]) ? $this->headers[$key] : NULL;
+    return !empty($this->headers[$key]) ? $this->headers[$key] : '';
   }
 
   /**
@@ -54,23 +54,36 @@ class HeaderData {
    *
    * @param string $key
    *   Key for the header.
-   * @param string $regex
-   *   Regex match string.
    */
-  public function parseHeader($key, $regex): array {
+  public function parseHeader($key): array {
     // Get specified header.
     $header = $this->getHeader($key);
 
     if (!empty($header)) {
-      // Parse header using regex.
-      $output_array = [];
-      preg_match($regex, $header, $output_array);
+      switch ($key) {
+        // Parse interest header.
+        case 'Interest':
+          // Regex match.
+          $regex = '/geo:(.*)/i';
 
-      // Return regex matches if found.
-      return !empty($output_array) && count($output_array) > 1 ? array_slice($output_array, 1) : $header;
+          // Parse header using regex.
+          $output_array = [];
+          preg_match($regex, $header, $output_array);
+
+          // Return regex matches if found.
+          $parsed_header = !empty($output_array) && count($output_array) > 1 ? array_slice($output_array, 1) : $header;
+          break;
+
+        // By default, just return header.
+        default:
+          $parsed_header = [$header];
+          break;
+      }
+
+      return $parsed_header;
     }
 
-    return NULL;
+    return [];
   }
 
   /**
@@ -80,11 +93,11 @@ class HeaderData {
     $p_obj = [];
 
     // Get parsed Interest header.
-    $interest_header_parse = $this->parseHeader('Interest', '/geo:(.*)/i');
+    $interest_header_parsed = $this->parseHeader('Interest');
 
     // Add location to object.
-    if (!empty($interest_header_parse)) {
-      $p_obj['location'] = $interest_header_parse[0];
+    if (!empty($interest_header_parsed)) {
+      $p_obj['location'] = $interest_header_parsed[0];
     }
 
     return $p_obj;
