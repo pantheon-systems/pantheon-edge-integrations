@@ -112,4 +112,30 @@ class HeaderData {
     return $p_obj;
   }
 
+  /**
+   * Returns vary header array.
+   *
+   * @param string $key
+   *   Key for the header.
+   *
+   * @return array
+   *   Vary header array, based on header data.
+   */
+  public function returnVaryHeader($key): array {
+    // Get current vary data if it exists, otherwise start with empty array.
+    $vary_header = $this->getHeader('Vary');
+    $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
+
+    // Parse header.
+    $header_parsed = $this->parseHeader($key);
+
+    // Set Vary header according to parsed header data.
+    if (!empty($header_parsed)) {
+      $vary_header_array[] = $header_parsed[0];
+    }
+
+    // Return vary header array structure.
+    return ['vary' => $vary_header_array];
+  }
+
 }
