@@ -24,7 +24,7 @@ class HeaderData {
   }
 
   /**
-   * Get headers.
+   * Retrieve header data and set in $headers array.
    */
   private function getRequestHeaders(): array {
     $headers = [];
@@ -44,6 +44,9 @@ class HeaderData {
    *
    * @param string $key
    *   Key for the header.
+   *
+   * @return string
+   *   Returns header value.
    */
   public function getHeader($key): string {
     return !empty($this->headers[$key]) ? $this->headers[$key] : '';
@@ -54,6 +57,9 @@ class HeaderData {
    *
    * @param string $key
    *   Key for the header.
+   *
+   * @return array
+   *   Returns important parts of header string.
    */
   public function parseHeader($key): array {
     // Get specified header.
@@ -88,6 +94,9 @@ class HeaderData {
 
   /**
    * Gets personalizaition object.
+   *
+   * @return array
+   *   Returns object with data used for personalization.
    */
   public function returnPersonalizationObject(): array {
     $p_obj = [];
