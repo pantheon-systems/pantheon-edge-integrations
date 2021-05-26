@@ -77,7 +77,7 @@ class HeaderData {
           preg_match($regex, $header, $output_array);
 
           // Return regex matches if found.
-          $parsed_header = !empty($output_array) && count($output_array) > 1 ? array_slice($output_array, 1) : $header;
+          $parsed_header = !empty($output_array) && count($output_array) > 1 ? array_slice($output_array, 1) : [$header];
           break;
 
         // By default, just return header.
@@ -106,7 +106,7 @@ class HeaderData {
 
     // Add location to object.
     if (!empty($interest_header_parsed)) {
-      $p_obj['location'] = $interest_header_parsed[0];
+      $p_obj['geo'] = $interest_header_parsed[0];
     }
 
     return $p_obj;
