@@ -66,23 +66,34 @@ class HeaderData {
     $header = $this->getHeader($key);
 
     if (!empty($header)) {
+      $parsed_header = [];
       switch ($key) {
         // Parse interest header.
         case 'Interest':
-          // Regex match.
-          $regex = '/geo:(.*)/i';
+          // Separate different pairs in header string.
+          $header_parts = explode('|', $header);
 
-          // Parse header using regex.
-          $output_array = [];
-          preg_match($regex, $header, $output_array);
+          foreach ($header_parts as $header_part) {
+            // Skip if empty.
+            if (empty($header_part)) {
+              continue;
+            }
 
-          // Return regex matches if found.
-          $parsed_header = !empty($output_array) && count($output_array) > 1 ? array_slice($output_array, 1) : [$header];
+            // Separate the pair string into key and value.
+            $header_pair = explode(':', $header_part);
+            if (count($header_pair) >= 2) {
+              $parsed_header[$header_pair[0]] = $header_pair[1];
+            }
+            // If string isn't formatted as a pair, just set string.
+            else {
+              $parsed_header[$key][] = $header_part;
+            }
+          }
           break;
 
         // By default, just return header.
         default:
-          $parsed_header = [$header];
+          $parsed_header = [$key => $header];
           break;
       }
 
@@ -104,9 +115,9 @@ class HeaderData {
     // Get parsed Interest header.
     $interest_header_parsed = $this->parseHeader('Interest');
 
-    // Add location to object.
-    if (!empty($interest_header_parsed)) {
-      $p_obj['geo'] = $interest_header_parsed[0];
+    // Add geo value to object.
+    if (!empty($interest_header_parsed['geo'])) {
+      $p_obj['geo'] = $interest_header_parsed['geo'];
     }
 
     return $p_obj;
@@ -131,7 +142,7 @@ class HeaderData {
 
     // Set Vary header according to parsed header data.
     if (!empty($header_parsed)) {
-      $vary_header_array[] = $header_parsed[0];
+      $vary_header_array[] = $header_parsed['geo'];
     }
 
     // Return vary header array structure.
