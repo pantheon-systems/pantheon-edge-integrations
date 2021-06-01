@@ -137,13 +137,8 @@ class HeaderData {
     $vary_header = $this->getHeader('Vary');
     $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
 
-    // Parse header.
-    $header_parsed = $this->parseHeader($key);
-
-    // Set Vary header according to parsed header data.
-    if (!empty($header_parsed)) {
-      $vary_header_array[] = $header_parsed['geo'];
-    }
+    // Add header $key to Vary header.
+    $vary_header_array[] = $key;
 
     // Return vary header array structure.
     return ['vary' => $vary_header_array];
