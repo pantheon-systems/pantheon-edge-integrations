@@ -48,7 +48,7 @@ class HeaderData {
    * @return string
    *   Returns header value.
    */
-  public function getHeader($key): string {
+  public function getHeader(string $key): string {
     return !empty($this->headers[$key]) ? $this->headers[$key] : '';
   }
 
@@ -106,18 +106,23 @@ class HeaderData {
   /**
    * Gets personalizaition object.
    *
+   * @param string $header_key
+   *    Name of the header.
+   * @param string $param_key
+   *    Name of the key in the header array.
+   * 
    * @return array
    *   Returns object with data used for personalization.
    */
-  public function returnPersonalizationObject(): array {
+  public function returnPersonalizationObject(string $header_key = '', string $param_key = ''): array {
     $p_obj = [];
 
     // Get parsed Interest header.
-    $interest_header_parsed = $this->parseHeader('Interest');
+    $interest_header_parsed = $this->parseHeader($header_key);
 
     // Add geo value to object.
-    if (!empty($interest_header_parsed['geo'])) {
-      $p_obj['geo'] = $interest_header_parsed['geo'];
+    if (!empty($interest_header_parsed[$param_key])) {
+      $p_obj[$param_key] = $interest_header_parsed[$param_key];
     }
 
     return $p_obj;
@@ -132,7 +137,7 @@ class HeaderData {
    * @return array
    *   Vary header array, based on header data.
    */
-  public function returnVaryHeader($key): array {
+  public function returnVaryHeader(string $key): array {
     // Get current vary data if it exists, otherwise start with empty array.
     $vary_header = $this->getHeader('Vary');
     $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
