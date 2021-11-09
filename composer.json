@@ -1,6 +1,6 @@
 {
   "name": "kalamuna/smart-cdn",
-  "description": "Helper class to locate a Drupal installation from a given path.",
+  "description": "Helper class for content personalization.",
   "license": "MIT",
   "type": "library",
   "authors": [
