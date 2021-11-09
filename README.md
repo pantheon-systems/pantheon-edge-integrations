@@ -11,3 +11,6 @@ Uses header key to return parsed header data array.
 
 ### returnPersonalizationObject()
 Returns an array with personalization data.
+
+### returnVaryHeader($key)
+Returns vary header array, based on header data.
