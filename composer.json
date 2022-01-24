@@ -1,23 +1,14 @@
 {
-  "name": "kalamuna/smart-cdn",
+  "name": "pantheon-systems/pantheon-edge-integrations",
   "description": "Helper class for content personalization.",
   "license": "MIT",
   "type": "library",
-  "authors": [
-    {
-      "name": "Kelly Jacobs",
-      "email": "kelly@kalamuna.com"
-    }
-  ],
-  "require": {
-    "php": "^7.1"
-  },
   "autoload": {
     "classmap": [
       "src/"
     ],
     "psr-4": {
-      "Kalamuna\\SmartCDN\\": "src"
+      "Pantheon\\EI\\": "src"
     }
   },
   "minimum-stability": "dev",
