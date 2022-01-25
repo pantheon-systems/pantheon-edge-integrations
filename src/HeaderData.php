@@ -18,17 +18,30 @@ class HeaderData {
 
   /**
    * Constructor.
+   *
+   * @param array $headerData (optional)
+   *   The input header data. If not provided, will default to $_SERVER.
+   *
+   * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-  public function __construct() {
-    $this->headers = $this->getRequestHeaders();
+  public function __construct(array $headerData = null) {
+    $this->headers = $this->getRequestHeaders($headerData);
   }
 
   /**
    * Retrieve header data and set in $headers array.
+   *
+   * @param array $headerData (optional)
+   *   The input header data. If not provided, will default to $_SERVER.
+   *
+   * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-  private function getRequestHeaders(): array {
+  private function getRequestHeaders(array $headerData = null): array {
+    if (is_null($headerData)) {
+      $headerData = $_SERVER;
+    }
     $headers = [];
-    foreach ($_SERVER as $key => $value) {
+    foreach ($headerData as $key => $value) {
       if (substr($key, 0, 5) <> 'HTTP_') {
         continue;
       }

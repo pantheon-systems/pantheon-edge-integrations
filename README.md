@@ -16,3 +16,12 @@ Returns an array with personalization data.
 
 ### returnVaryHeader($key)
 Returns vary header array, based on header data.
+
+## Development
+
+[PHPUnit](https://phpunit.de/) is used to run the [tests](tests).
+
+``` bash
+composer install
+composer test
+```
