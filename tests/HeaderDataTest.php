@@ -75,7 +75,7 @@ final class HeaderDataTest extends TestCase
 
   public function testReturnPersonalizationObject(): void {
     $input = [
-      'HTTP_AUDIENCE' => 'Parents|Children',
+      'HTTP_AUDIENCE' => 'geo:US',
       'HTTP_ROLE' => 'Administrator',
       'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman',
       'HTTP_IGNORED' => 'HTTP Ignored Entry',
@@ -84,9 +84,7 @@ final class HeaderDataTest extends TestCase
     $headerData = new HeaderData($input);
     $result = $headerData->returnPersonalizationObject();
 
-    $this->assertIsArray($result['Audience']);
-    $this->assertIsArray($result['Audience']['Audience']);
-    $this->assertEquals($result['Audience']['Audience'], ['Parents', 'Children']);
+    $this->assertEquals($result['Audience']['geo'], 'US');
     $this->assertEquals($result['Role'], 'Administrator');
     $this->assertNull($result['Ignored']);
   }
