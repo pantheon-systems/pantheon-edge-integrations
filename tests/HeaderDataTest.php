@@ -53,7 +53,7 @@ final class HeaderDataTest extends TestCase
 
     // Audience
     $audience = $headerData->parseHeader('Audience');
-    $this->assertIsArray($audience['Audience']); // TODO: The Audience is nested. Intended?
+    $this->assertIsArray($audience['Audience']);
     $this->assertEquals($audience['Audience'][1], 'Children');
     $this->assertEquals($audience['Name'], 'AnnaMykhailova'); // Take the last entry.
     $this->assertEquals($audience['Age'], 47);
