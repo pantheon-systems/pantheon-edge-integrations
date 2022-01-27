@@ -86,7 +86,7 @@ final class HeaderDataTest extends TestCase
 
     $this->assertEquals($result['Audience']['geo'], 'US');
     $this->assertEquals($result['Role'], 'Administrator');
-    $this->assertNull($result['Ignored']);
+    $this->assertArrayNotHasKey('Ignored', $result);
   }
 
   public function testReturnVaryHeader(): void {
