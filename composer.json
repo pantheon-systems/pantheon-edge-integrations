@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit tests"
+    "test": "vendor/bin/phpunit -c phpunit.xml"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
