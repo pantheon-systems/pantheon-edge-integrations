@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file PHPUnit tests for Pantheon Edge Integrations' HeaderData class.
+ *
+ * @see Pantheon\EI\HeaderData
+ */
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -7,6 +13,13 @@ use Pantheon\EI\HeaderData;
 
 final class HeaderDataTest extends TestCase
 {
+  /**
+   * Tests the HeaderData constructor.
+   *
+   * @see Pantheon\EI\HeaderData::HeaderData()
+   *
+   * @group headerdata
+   */
   public function testConstructor(): void {
     // Empty Constructor.
     $headerData = new HeaderData();
@@ -24,6 +37,11 @@ final class HeaderDataTest extends TestCase
     $this->assertIsObject($headerData);
   }
 
+  /**
+   * Tests HeaderData's getHeader() method.
+   *
+   * @group headerdata
+   */
   public function testGetHeader(): void {
     $input = [
       'HTTP_SHOULD_BE_FOUND' => 'Should be found',
@@ -37,7 +55,13 @@ final class HeaderDataTest extends TestCase
     $this->assertEquals($headerData->getHeader('User-Agent'), 'Should become User_Agent');
   }
 
+  /**
+   * Tests HeaderData's parseHeader() method, which has a focus on HTTP_AUDIENCE and HTTP_INTEREST.
+   *
+   * @group headerdata
+   */
   public function testParseHeader(): void {
+    // The Audience and Interest entries are parsed into arrays.
     $input = [
       'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
       'HTTP_USER_AGENT' => 'Should just return the value',
@@ -73,6 +97,11 @@ final class HeaderDataTest extends TestCase
     $this->assertEquals($headerData->parseHeader('User-Agent'), 'Should just return the value');
   }
 
+  /**
+   * Tests HeaderData's returnPersonalizationObject() method.
+   *
+   * @group headerdata
+   */
   public function testReturnPersonalizationObject(): void {
     $input = [
       'HTTP_AUDIENCE' => 'geo:US',
@@ -89,6 +118,11 @@ final class HeaderDataTest extends TestCase
     $this->assertArrayNotHasKey('Ignored', $result);
   }
 
+  /**
+   * Tests HeaderData's returnVaryHeader() method.
+   *
+   * @group headerdata
+   */
   public function testReturnVaryHeader(): void {
     // Without a Vary Header
     $headerData = new HeaderData([
