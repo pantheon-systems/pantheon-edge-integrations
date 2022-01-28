@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/config/bootstrap.php">
+<phpunit>
 	<testsuites>
-		<testsuite name="WP Unit Tests">
+		<testsuite name="Pantheon Edge Integrations Unit Tests">
 			<directory>./tests/</directory>
 		</testsuite>
 	</testsuites>
