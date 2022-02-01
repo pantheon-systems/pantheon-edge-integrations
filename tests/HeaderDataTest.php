@@ -185,7 +185,6 @@ final class HeaderDataTest extends TestCase
     ];
     HeaderData::setHeaderData($input);
 
-    // parse()
     $audience = HeaderData::parse('Audience');
     $this->assertArrayHasKey('Age', $audience);
     $this->assertEquals(47, $audience['Age']);
@@ -204,7 +203,6 @@ final class HeaderDataTest extends TestCase
     ];
     HeaderData::setHeaderData($input);
 
-    // personalizationObject()
     $personalizationObject = HeaderData::personalizationObject();
     $this->assertArrayHasKey('Role', $personalizationObject);
     $this->assertEquals('Administrator', $personalizationObject['Role']);
