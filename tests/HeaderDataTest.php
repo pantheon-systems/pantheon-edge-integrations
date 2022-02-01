@@ -149,5 +149,86 @@ final class HeaderDataTest extends TestCase
     $result = $headerData->returnVaryHeader(['Author' => 'Ray Bradbury']);
     $this->assertEquals($result['vary']['Author'], 'Ray Bradbury');
   }
-}
 
+  /**
+   * Tests the global HeaderData::header() function.
+   * 
+   * @see Pantheon\EI\HeaderData::header()
+   * 
+   * @group headerdata
+   */
+  public function testGlobalHeader() {
+    // Initialize both the global and an instance as the same input.
+    $input = [
+      'IGNORED_ENTRY' => 'Completely ignored entry',
+      'HTTP_SHOULD_BE_FOUND' => 'Should be found',
+    ];
+    HeaderData::setHeaderData($input);
+
+    $this->assertIsString(HeaderData::header('Should-Be-Found'), 'HeaderData::header() should return a string');
+    $this->assertEquals('Should be found', HeaderData::header('Should-Be-Found'));
+  }
+
+  /**
+   * Tests the global HeaderData::parse() function.
+   * 
+   * @see Pantheon\EI\HeaderData::parse()
+   * 
+   * @group headerdata
+   */
+  public function testGlobalParse() {
+    // Initialize both the global and an instance as the same input.
+    $input = [
+      'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
+      'HTTP_IGNORED' => 'HTTP Ignored Entry',
+      'IGNORED_ENTRY' => 'Completely ignored entry',
+    ];
+    HeaderData::setHeaderData($input);
+
+    // parse()
+    $audience = HeaderData::parse('Audience');
+    $this->assertArrayHasKey('Age', $audience);
+    $this->assertEquals(47, $audience['Age']);
+  }
+
+  /**
+   * Tests the global HeaderData::personalizationObject() function.
+   * 
+   * @see Pantheon\EI\HeaderData::personalizationObject()
+   * 
+   * @group headerdata
+   */
+  public function testGlobalPersonalizationObject() {
+    $input = [
+      'HTTP_ROLE' => 'Administrator',
+    ];
+    HeaderData::setHeaderData($input);
+
+    // personalizationObject()
+    $personalizationObject = HeaderData::personalizationObject();
+    $this->assertArrayHasKey('Role', $personalizationObject);
+    $this->assertEquals('Administrator', $personalizationObject['Role']);
+  }
+
+  /**
+   * Tests the global HeaderData::varyHeader() function.
+   * 
+   * @see Pantheon\EI\HeaderData::varyHeader()
+   * 
+   * @group headerdata
+   */
+  public function testGlobalVaryHeader(): void {
+    // Initialize both the global and an instance as the same input.
+    $input = [
+      'HTTP_IGNORED' => 'HTTP Ignored Entry',
+      'IGNORED_ENTRY' => 'Completely ignored entry',
+      'HTTP_SHOULD_BE_FOUND' => 'Should be found',
+      'HTTP_VARY' => 'Something, Wicked, This, Way',
+    ];
+    HeaderData::setHeaderData($input);
+
+    $varyHeader = HeaderData::varyHeader('Comes');
+    $this->assertArrayHasKey('vary', $varyHeader);
+    $this->assertEquals($varyHeader['vary'], ['Something', 'Wicked', 'This', 'Way', 'Comes']);
+  }
+}

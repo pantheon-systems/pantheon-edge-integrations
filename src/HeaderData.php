@@ -17,6 +17,13 @@ class HeaderData {
   private $headers;
 
   /**
+   * The static header data used for the global function calls.
+   *
+   * @var headerData
+   */
+  private static $headerData;
+
+  /**
    * Constructor.
    *
    * @param array $headerData (optional)
@@ -180,4 +187,81 @@ class HeaderData {
     return ['vary' => $vary_header_array];
   }
 
+  /**
+   * Get the singleton instance for the global functions API.
+   */
+  private static function getInstance(): HeaderData {
+    if (self::$headerData == null) {
+      self::$headerData = new HeaderData();
+    }
+ 
+    return self::$headerData;
+  }
+
+  /**
+   * Sets the given header data associated with the global functions.
+   * 
+   * @param $data array (optional)
+   *   The array data to set when reading header data. Defaults to $_SERVER.
+   */
+  public static function setHeaderData(array $data = null): void {
+    self::$headerData = new HeaderData($data);
+  }
+
+  /**
+   * Gets the global header data based on the given key.
+   *
+   * @param string $key
+   *   Key for the header.
+   *
+   * @return string
+   *   Returns header value.
+   *
+   * @see getHeader()
+   */
+  public static function header($key) {
+    return self::getInstance()->getHeader($key);
+  }
+
+  /**
+   * Parses a global header by key using a specified regex.
+   *
+   * @param string $key
+   *   Key for the header.
+   *
+   * @return array|string
+   *   Returns important parts of header string.
+   *
+   * @see parseHeader()
+   */
+  public static function parse($key) {
+    return self::getInstance()->parseHeader($key);
+  }
+
+  /**
+   * Gets the global personalizaition object.
+   *
+   * @return array
+   *   Returns object with data used for personalization.
+   * 
+   * @see returnPersonalizedObject()
+   */
+  public static function personalizationObject() {
+    return self::getInstance()->returnPersonalizationObject();
+  }
+
+  /**
+   * Returns vary header array based on the global data.
+   *
+   * @param string|array $key
+   *   Key for the header, or array of keys.
+   *
+   * @return array
+   *   Vary header array, based on header data.
+   *
+   * @see returnVaryHeader()
+   */
+  public static function varyHeader($key): array {
+    return self::getInstance()->returnVaryHeader($key);
+  }
 }
