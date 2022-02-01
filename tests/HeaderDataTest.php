@@ -11,6 +11,11 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Pantheon\EI\HeaderData;
 
+/**
+ * Tests all the public functions within the HeaderData class.
+ *
+ * @see Pantheon\EI\HeaderData
+ */
 final class HeaderDataTest extends TestCase
 {
   /**
