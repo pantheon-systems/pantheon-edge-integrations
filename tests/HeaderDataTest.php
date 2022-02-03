@@ -163,10 +163,10 @@ final class HeaderDataTest extends TestCase
       'IGNORED_ENTRY' => 'Completely ignored entry',
       'HTTP_SHOULD_BE_FOUND' => 'Should be found',
     ];
-    HeaderData::setHeaderData($input);
 
-    $this->assertIsString(HeaderData::header('Should-Be-Found'), 'HeaderData::header() should return a string');
-    $this->assertEquals('Should be found', HeaderData::header('Should-Be-Found'));
+    $result = HeaderData::header('Should-Be-Found', $input);
+    $this->assertIsString($result, 'HeaderData::header() should return a string');
+    $this->assertEquals('Should be found', $result);
   }
 
   /**
@@ -183,9 +183,8 @@ final class HeaderDataTest extends TestCase
       'HTTP_IGNORED' => 'HTTP Ignored Entry',
       'IGNORED_ENTRY' => 'Completely ignored entry',
     ];
-    HeaderData::setHeaderData($input);
 
-    $audience = HeaderData::parse('Audience');
+    $audience = HeaderData::parse('Audience', $input);
     $this->assertArrayHasKey('Age', $audience);
     $this->assertEquals(47, $audience['Age']);
   }
@@ -201,9 +200,8 @@ final class HeaderDataTest extends TestCase
     $input = [
       'HTTP_ROLE' => 'Administrator',
     ];
-    HeaderData::setHeaderData($input);
 
-    $personalizationObject = HeaderData::personalizationObject();
+    $personalizationObject = HeaderData::personalizationObject($input);
     $this->assertArrayHasKey('Role', $personalizationObject);
     $this->assertEquals('Administrator', $personalizationObject['Role']);
   }
@@ -223,9 +221,8 @@ final class HeaderDataTest extends TestCase
       'HTTP_SHOULD_BE_FOUND' => 'Should be found',
       'HTTP_VARY' => 'Something, Wicked, This, Way',
     ];
-    HeaderData::setHeaderData($input);
 
-    $varyHeader = HeaderData::varyHeader('Comes');
+    $varyHeader = HeaderData::varyHeader('Comes', $input);
     $this->assertArrayHasKey('vary', $varyHeader);
     $this->assertEquals($varyHeader['vary'], ['Something', 'Wicked', 'This', 'Way', 'Comes']);
   }

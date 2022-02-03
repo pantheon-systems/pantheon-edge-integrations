@@ -17,13 +17,6 @@ class HeaderData {
   private $headers;
 
   /**
-   * The static header data used for the global function calls.
-   *
-   * @var headerData
-   */
-  private static $headerData;
-
-  /**
    * Constructor.
    *
    * @param array $headerData (optional)
@@ -188,39 +181,20 @@ class HeaderData {
   }
 
   /**
-   * Get the singleton instance for the global functions API.
-   */
-  private static function getInstance(): HeaderData {
-    if (self::$headerData == null) {
-      self::$headerData = new HeaderData();
-    }
- 
-    return self::$headerData;
-  }
-
-  /**
-   * Sets the given header data associated with the global functions.
-   * 
-   * @param $data array (optional)
-   *   The array data to set when reading header data. Defaults to $_SERVER.
-   */
-  public static function setHeaderData(array $data = null): void {
-    self::$headerData = new HeaderData($data);
-  }
-
-  /**
    * Gets the global header data based on the given key.
    *
    * @param string $key
    *   Key for the header.
+   * @param array $data (optional)
+   *   The header data to parse. Defaults to $_SERVER.
    *
    * @return string
    *   Returns header value.
    *
    * @see getHeader()
    */
-  public static function header($key) {
-    return self::getInstance()->getHeader($key);
+  public static function header($key, array $data = null) {
+    return (new HeaderData($data))->getHeader($key);
   }
 
   /**
@@ -228,14 +202,16 @@ class HeaderData {
    *
    * @param string $key
    *   Key for the header.
+   * @param array $data (optional)
+   *   The header data to parse. Defaults to $_SERVER.
    *
    * @return array|string
    *   Returns important parts of header string.
    *
    * @see parseHeader()
    */
-  public static function parse($key) {
-    return self::getInstance()->parseHeader($key);
+  public static function parse($key, array $data = null) {
+    return (new HeaderData($data))->parseHeader($key);
   }
 
   /**
@@ -243,11 +219,13 @@ class HeaderData {
    *
    * @return array
    *   Returns object with data used for personalization.
-   * 
+   * @param array $data (optional)
+   *   The header data to parse. Defaults to $_SERVER.
+   *
    * @see returnPersonalizedObject()
    */
-  public static function personalizationObject() {
-    return self::getInstance()->returnPersonalizationObject();
+  public static function personalizationObject(array $data = null) {
+    return (new HeaderData($data))->returnPersonalizationObject();
   }
 
   /**
@@ -255,13 +233,15 @@ class HeaderData {
    *
    * @param string|array $key
    *   Key for the header, or array of keys.
+   * @param array $data (optional)
+   *   The header data to parse. Defaults to $_SERVER.
    *
    * @return array
    *   Vary header array, based on header data.
    *
    * @see returnVaryHeader()
    */
-  public static function varyHeader($key): array {
-    return self::getInstance()->returnVaryHeader($key);
+  public static function varyHeader($key, array $data = null): array {
+    return (new HeaderData($data))->returnVaryHeader($key);
   }
 }

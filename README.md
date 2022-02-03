@@ -22,10 +22,10 @@ Returns vary header array, based on header data.
 There are a set of global functions that mirror the object methods, allowing using the API through a singleton global instance rather than having to instantiate it locally. These functions are as follows...
 
 ``` php
-HeaderData::header($key);
-HeaderData::parse($key);
-HeaderData::personalizationObject();
-HeaderData::varyHeader($key);
+HeaderData::header($key, array $data = null);
+HeaderData::parse($key, array $data = null);
+HeaderData::personalizationObject(array $data = null);
+HeaderData::varyHeader($key, array $data = null);
 ```
 
 ## Development
