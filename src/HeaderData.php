@@ -101,10 +101,9 @@ class HeaderData
                         $header_pair = explode(':', $header_part);
                         if (count($header_pair) >= 2) {
                             $parsed_header[$header_pair[0]] = $header_pair[1];
-                        }
-                      // If string isn't formatted as a pair, just set string.
-                        else {
-                              $parsed_header[$key][] = $header_part;
+                        } else {
+                            // If string isn't formatted as a pair, just set string.
+                            $parsed_header[$key][] = $header_part;
                         }
                     }
                     break;
@@ -177,9 +176,8 @@ class HeaderData
       // If array, merge the arrays.
         if (is_array($key)) {
             $vary_header_array += $key;
-        }
-      // Otherrwise, add header $key to Vary header.
-        else {
+        } else {
+            // Otherrwise, add header $key to Vary header.
             $vary_header_array[] = $key;
         }
 
