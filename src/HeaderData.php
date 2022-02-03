@@ -188,6 +188,9 @@ class HeaderData {
    * @param array $data (optional)
    *   The header data to parse. Defaults to $_SERVER.
    *
+   * Example:
+   *     Pantheon\EI\HeaderData::header('Audience');
+   *
    * @return string
    *   Returns header value.
    *
@@ -204,6 +207,9 @@ class HeaderData {
    *   Key for the header.
    * @param array $data (optional)
    *   The header data to parse. Defaults to $_SERVER.
+   *
+   * Example:
+   *     Pantheon\EI\HeaderData::parse('Audience');
    *
    * @return array|string
    *   Returns important parts of header string.
@@ -222,6 +228,9 @@ class HeaderData {
    * @param array $data (optional)
    *   The header data to parse. Defaults to $_SERVER.
    *
+   * Example:
+   *     Pantheon\EI\HeaderData::personalizationObject();
+   *
    * @see returnPersonalizedObject()
    */
   public static function personalizationObject(array $data = null) {
@@ -235,6 +244,9 @@ class HeaderData {
    *   Key for the header, or array of keys.
    * @param array $data (optional)
    *   The header data to parse. Defaults to $_SERVER.
+   *
+   * Example:
+   *     Pantheon\EI\HeaderData::varyHeader('geo');
    *
    * @return array
    *   Vary header array, based on header data.
