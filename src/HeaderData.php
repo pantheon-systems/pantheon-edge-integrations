@@ -177,4 +177,81 @@ class HeaderData {
       // Return vary header array structure.
         return ['vary' => $vary_header_array];
     }
+
+    /**
+     * Gets the global header data based on the given key.
+     *
+     * @param string $key
+     *   Key for the header.
+     * @param array $data (optional)
+     *   The header data to parse. Defaults to $_SERVER.
+     *
+     * Example:
+     *     Pantheon\EI\HeaderData::header('Audience');
+     *
+     * @return string
+     *   Returns header value.
+     *
+     * @see getHeader()
+     */
+    public static function header($key, array $data = null) {
+        return (new HeaderData($data))->getHeader($key);
+    }
+
+    /**
+     * Parses a global header by key using a specified regex.
+     *
+     * @param string $key
+     *   Key for the header.
+     * @param array $data (optional)
+     *   The header data to parse. Defaults to $_SERVER.
+     *
+     * Example:
+     *     Pantheon\EI\HeaderData::parse('Audience');
+     *
+     * @return array|string
+     *   Returns important parts of header string.
+     *
+     * @see parseHeader()
+     */
+    public static function parse($key, array $data = null) {
+        return (new HeaderData($data))->parseHeader($key);
+    }
+
+    /**
+     * Gets the global personalizaition object.
+     *
+     * @return array
+     *   Returns object with data used for personalization.
+     * @param array $data (optional)
+     *   The header data to parse. Defaults to $_SERVER.
+     *
+     * Example:
+     *     Pantheon\EI\HeaderData::personalizationObject();
+     *
+     * @see returnPersonalizedObject()
+     */
+    public static function personalizationObject(array $data = null) {
+        return (new HeaderData($data))->returnPersonalizationObject();
+    }
+
+    /**
+     * Returns vary header array based on the global data.
+     *
+     * @param string|array $key
+     *   Key for the header, or array of keys.
+     * @param array $data (optional)
+     *   The header data to parse. Defaults to $_SERVER.
+     *
+     * Example:
+     *     Pantheon\EI\HeaderData::varyHeader('geo');
+     *
+     * @return array
+     *   Vary header array, based on header data.
+     *
+     * @see returnVaryHeader()
+     */
+    public static function varyHeader($key, array $data = null): array {
+        return (new HeaderData($data))->returnVaryHeader($key);
+    }
 }
