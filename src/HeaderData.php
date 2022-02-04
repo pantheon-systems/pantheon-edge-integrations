@@ -7,14 +7,15 @@ namespace Pantheon\EI;
 /**
  * A class to handle smart content delivery network for users.
  */
-class HeaderData {
+class HeaderData
+{
 
   /**
    * Header data.
    *
    * @var headers
    */
-  private $headers;
+    private $headers;
 
   /**
    * Constructor.
@@ -24,9 +25,10 @@ class HeaderData {
    *
    * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-  public function __construct(array $headerData = null) {
-    $this->headers = $this->getRequestHeaders($headerData);
-  }
+    public function __construct(array $headerData = null)
+    {
+        $this->headers = $this->getRequestHeaders($headerData);
+    }
 
   /**
    * Retrieve header data and set in $headers array.
@@ -36,21 +38,22 @@ class HeaderData {
    *
    * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-  private function getRequestHeaders(array $headerData = null): array {
-    if (is_null($headerData)) {
-      $headerData = $_SERVER;
-    }
-    $headers = [];
-    foreach ($headerData as $key => $value) {
-      if (substr($key, 0, 5) <> 'HTTP_') {
-        continue;
-      }
-      $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
-      $headers[$header] = $value;
-    }
+    private function getRequestHeaders(array $headerData = null): array
+    {
+        if (is_null($headerData)) {
+            $headerData = $_SERVER;
+        }
+        $headers = [];
+        foreach ($headerData as $key => $value) {
+            if (substr($key, 0, 5) <> 'HTTP_') {
+                continue;
+            }
+            $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+            $headers[$header] = $value;
+        }
 
-    return $headers;
-  }
+        return $headers;
+    }
 
   /**
    * Gets a header by key.
@@ -61,9 +64,10 @@ class HeaderData {
    * @return string
    *   Returns header value.
    */
-  public function getHeader($key): string {
-    return !empty($this->headers[$key]) ? $this->headers[$key] : '';
-  }
+    public function getHeader($key): string
+    {
+        return !empty($this->headers[$key]) ? $this->headers[$key] : '';
+    }
 
   /**
    * Parses a header by key using a specified regex.
@@ -74,56 +78,56 @@ class HeaderData {
    * @return array|string
    *   Returns important parts of header string.
    */
-  public function parseHeader($key) {
-    // Get specified header.
-    $header = $this->getHeader($key);
+    public function parseHeader($key)
+    {
+      // Get specified header.
+        $header = $this->getHeader($key);
 
-    if (!empty($header)) {
-      $parsed_header = [];
-      switch ($key) {
-        // Parse Audience header.
-        case 'Audience':
-          // Separate different pairs in header string.
-          $header_parts = explode('|', $header);
+        if (!empty($header)) {
+            $parsed_header = [];
+            switch ($key) {
+                // Parse Audience header.
+                case 'Audience':
+                  // Separate different pairs in header string.
+                    $header_parts = explode('|', $header);
 
-          foreach ($header_parts as $header_part) {
-            // Skip if empty.
-            if (empty($header_part)) {
-              continue;
+                    foreach ($header_parts as $header_part) {
+                        // Skip if empty.
+                        if (empty($header_part)) {
+                            continue;
+                        }
+
+                        // Separate the pair string into key and value.
+                        $header_pair = explode(':', $header_part);
+                        if (count($header_pair) >= 2) {
+                            $parsed_header[$header_pair[0]] = $header_pair[1];
+                        } else {
+                            // If string isn't formatted as a pair, just set string.
+                            $parsed_header[$key][] = $header_part;
+                        }
+                    }
+                    break;
+
+                // Parse Interest header.
+                case 'Interest':
+                  // Decode special characters.
+                    $header_decoded = urldecode($header);
+
+                  // Split header value into an array.
+                    $parsed_header = explode('|', $header_decoded);
+                    break;
+
+                // By default, just return header.
+                default:
+                    $parsed_header = $header;
+                    break;
             }
 
-            // Separate the pair string into key and value.
-            $header_pair = explode(':', $header_part);
-            if (count($header_pair) >= 2) {
-              $parsed_header[$header_pair[0]] = $header_pair[1];
-            }
-            // If string isn't formatted as a pair, just set string.
-            else {
-              $parsed_header[$key][] = $header_part;
-            }
-          }
-          break;
+            return $parsed_header;
+        }
 
-        // Parse Interest header.
-        case 'Interest':
-          // Decode special characters.
-          $header_decoded = urldecode($header);
-
-          // Split header value into an array.
-          $parsed_header = explode('|', $header_decoded);
-          break;
-
-        // By default, just return header.
-        default:
-          $parsed_header = $header;
-          break;
-      }
-
-      return $parsed_header;
+        return [];
     }
-
-    return [];
-  }
 
   /**
    * Gets personalizaition object.
@@ -131,27 +135,28 @@ class HeaderData {
    * @return array
    *   Returns object with data used for personalization.
    */
-  public function returnPersonalizationObject(): array {
-    $p_obj = [];
+    public function returnPersonalizationObject(): array
+    {
+        $p_obj = [];
 
-    $header_keys = [
-      'Audience',
-      'Interest',
-      'Role',
-    ];
+        $header_keys = [
+        'Audience',
+        'Interest',
+        'Role',
+        ];
 
-    foreach ($header_keys as $key) {
-      // Get parsed header value.
-      $header_parsed = $this->parseHeader($key);
+        foreach ($header_keys as $key) {
+          // Get parsed header value.
+            $header_parsed = $this->parseHeader($key);
 
-      // Add header value to personalization object.
-      if (!empty($header_parsed)) {
-        $p_obj[$key] = $header_parsed;
-      }
+          // Add header value to personalization object.
+            if (!empty($header_parsed)) {
+                $p_obj[$key] = $header_parsed;
+            }
+        }
+
+        return $p_obj;
     }
-
-    return $p_obj;
-  }
 
   /**
    * Returns vary header array.
@@ -162,22 +167,21 @@ class HeaderData {
    * @return array
    *   Vary header array, based on header data.
    */
-  public function returnVaryHeader($key): array {
-    // Get current vary data if it exists, otherwise start with empty array.
-    $vary_header = $this->getHeader('Vary');
-    $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
+    public function returnVaryHeader($key): array
+    {
+      // Get current vary data if it exists, otherwise start with empty array.
+        $vary_header = $this->getHeader('Vary');
+        $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
 
-    // If array, merge the arrays.
-    if (is_array($key)) {
-      $vary_header_array += $key;
+      // If array, merge the arrays.
+        if (is_array($key)) {
+            $vary_header_array += $key;
+        } else {
+            // Otherrwise, add header $key to Vary header.
+            $vary_header_array[] = $key;
+        }
+
+      // Return vary header array structure.
+        return ['vary' => $vary_header_array];
     }
-    // Otherrwise, add header $key to Vary header.
-    else {
-      $vary_header_array[] = $key;
-    }
-
-    // Return vary header array structure.
-    return ['vary' => $vary_header_array];
-  }
-
 }
