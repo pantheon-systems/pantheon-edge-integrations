@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "cbf": "vendor/bin/phpcbf -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
+    "lint:phpcbf": "vendor/bin/phpcbf -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
     "lint:php": "find src/ -name '*.php' -exec php -l {} \\;",
     "lint:phpcs": "vendor/bin/phpcs -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
     "lint": "composer lint:php && composer lint:phpcs",
