@@ -7,8 +7,7 @@ namespace Pantheon\EI;
 /**
  * A class to handle smart content delivery network for users.
  */
-class HeaderData
-{
+class HeaderData {
 
   /**
    * Header data.
@@ -25,8 +24,7 @@ class HeaderData
    *
    * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-    public function __construct(array $headerData = null)
-    {
+    public function __construct(array $headerData = null) {
         $this->headers = $this->getRequestHeaders($headerData);
     }
 
@@ -38,8 +36,7 @@ class HeaderData
    *
    * @see https://www.php.net/manual/en/reserved.variables.server.php
    */
-    private function getRequestHeaders(array $headerData = null): array
-    {
+    private function getRequestHeaders(array $headerData = null): array {
         if (is_null($headerData)) {
             $headerData = $_SERVER;
         }
@@ -64,8 +61,7 @@ class HeaderData
    * @return string
    *   Returns header value.
    */
-    public function getHeader($key): string
-    {
+    public function getHeader($key): string {
         return !empty($this->headers[$key]) ? $this->headers[$key] : '';
     }
 
@@ -78,8 +74,7 @@ class HeaderData
    * @return array|string
    *   Returns important parts of header string.
    */
-    public function parseHeader($key)
-    {
+    public function parseHeader($key) {
       // Get specified header.
         $header = $this->getHeader($key);
 
@@ -135,8 +130,7 @@ class HeaderData
    * @return array
    *   Returns object with data used for personalization.
    */
-    public function returnPersonalizationObject(): array
-    {
+    public function returnPersonalizationObject(): array {
         $p_obj = [];
 
         $header_keys = [
@@ -167,8 +161,7 @@ class HeaderData
    * @return array
    *   Vary header array, based on header data.
    */
-    public function returnVaryHeader($key): array
-    {
+    public function returnVaryHeader($key): array {
       // Get current vary data if it exists, otherwise start with empty array.
         $vary_header = $this->getHeader('Vary');
         $vary_header_array = !empty($vary_header) ? explode(', ', $vary_header) : [];
