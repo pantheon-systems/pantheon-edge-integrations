@@ -7,11 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: composer install
       run: |
         composer install
+
+    - name: composer lint
+      run: |
+        composer lint
 
     - name: composer test
       run: |
