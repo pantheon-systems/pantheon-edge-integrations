@@ -12,8 +12,10 @@
     }
   },
   "scripts": {
-    "cbf": "vendor/bin/phpcbf -s --standard=PSR2 src",
-    "lint": "vendor/bin/phpcs -s --standard=PSR2 src",
+    "cbf": "vendor/bin/phpcbf -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
+    "lint:php": "find src/ -name '*.php' -exec php -l {} \\;",
+    "lint:phpcs": "vendor/bin/phpcs -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
+    "lint": "composer lint:php && composer lint:phpcs",
     "test": "vendor/bin/phpunit -c phpunit.xml"
   },
   "minimum-stability": "dev",
