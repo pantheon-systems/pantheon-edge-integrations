@@ -194,9 +194,9 @@ class HeaderData {
      *
      * @see getHeader()
      */
-      public static function header($key, array $data = null) {
-          return (new HeaderData($data))->getHeader($key);
-      }
+    public static function header($key, array $data = null) {
+        return (new HeaderData($data))->getHeader($key);
+    }
 
     /**
      * Parses a global header by key using a specified regex.
@@ -214,9 +214,9 @@ class HeaderData {
      *
      * @see parseHeader()
      */
-      public static function parse($key, array $data = null) {
-          return (new HeaderData($data))->parseHeader($key);
-      }
+    public static function parse($key, array $data = null) {
+        return (new HeaderData($data))->parseHeader($key);
+    }
 
     /**
      * Gets the global personalizaition object.
@@ -231,9 +231,9 @@ class HeaderData {
      *
      * @see returnPersonalizedObject()
      */
-      public static function personalizationObject(array $data = null) {
-          return (new HeaderData($data))->returnPersonalizationObject();
-      }
+    public static function personalizationObject(array $data = null) {
+        return (new HeaderData($data))->returnPersonalizationObject();
+    }
 
     /**
      * Returns vary header array based on the global data.
@@ -251,7 +251,7 @@ class HeaderData {
      *
      * @see returnVaryHeader()
      */
-      public static function varyHeader($key, array $data = null): array {
-          return (new HeaderData($data))->returnVaryHeader($key);
-      }
+    public static function varyHeader($key, array $data = null): array {
+        return (new HeaderData($data))->returnVaryHeader($key);
+    }
 }
