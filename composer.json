@@ -12,8 +12,8 @@
     }
   },
   "scripts": {
-    "cbf": "vendor/bin/phpcbf --standard=PSR2 src",
-    "lint": "vendor/bin/phpcs --standard=PSR2 src",
+    "cbf": "vendor/bin/phpcbf -s --standard=PSR2 src",
+    "lint": "vendor/bin/phpcs -s --standard=PSR2 src",
     "test": "vendor/bin/phpunit -c phpunit.xml"
   },
   "minimum-stability": "dev",
