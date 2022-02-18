@@ -103,6 +103,8 @@ class HeaderData {
                     }
                     break;
 
+                // The Audience-Set header should be handled the same as the Interest header for now. If/when this is updated, it will behave more like Audience.
+                case 'Audience-Set':
                 // Parse Interest header.
                 case 'Interest':
                   // Decode special characters.
