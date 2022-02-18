@@ -83,6 +83,7 @@ class HeaderData {
             switch ($key) {
                 // Parse Audience header.
                 case 'Audience':
+                case 'Audience-Set':
                   // Separate different pairs in header string.
                     $header_parts = explode('|', $header);
 
@@ -103,9 +104,6 @@ class HeaderData {
                     }
                     break;
 
-                // The Audience-Set header should be handled the same as the Interest header for now. If/when this is updated, it will behave more like Audience.
-                case 'Audience-Set':
-                // Parse Interest header.
                 case 'Interest':
                   // Decode special characters.
                     $header_decoded = urldecode($header);
