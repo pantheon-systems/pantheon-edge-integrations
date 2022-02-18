@@ -137,6 +137,7 @@ class HeaderData {
 
         $header_keys = [
         'Audience',
+        'Audience-Set',
         'Interest',
         'Role',
         ];
