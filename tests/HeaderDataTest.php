@@ -69,6 +69,7 @@ final class HeaderDataTest extends TestCase
     // The Audience and Interest entries are parsed into arrays.
     $input = [
       'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
+      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
       'HTTP_USER_AGENT' => 'Should just return the value',
       'IGNORED TEST' => 'Should return an empty array',
       'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman||For Science!|With%20A Percent20',
@@ -86,6 +87,16 @@ final class HeaderDataTest extends TestCase
     $this->assertEquals($audience['Audience'][1], 'Children');
     $this->assertEquals($audience['Name'], 'AnnaMykhailova'); // Take the last entry.
     $this->assertEquals($audience['Age'], 47);
+
+    // Audience Set
+    $audienceSet = $headerData->parseHeader('Audience-Set');
+    $this->assertIsArray($audienceSet);
+    $this->assertEquals($audienceSet['country'], 'US');
+    $this->assertEquals($audienceSet['city'], 'Salt Lake City');
+    $this->assertEquals($audienceSet['region'], 'UT');
+    $this->assertEquals($audienceSet['continent'], 'NA');
+    $this->assertEquals($audienceSet['conn-speed'], 'broadband');
+    $this->assertEquals($audienceSet['conn-type'], 'wired');
 
     // Interest
     $interest = $headerData->parseHeader('Interest');
@@ -110,6 +121,7 @@ final class HeaderDataTest extends TestCase
   public function testReturnPersonalizationObject(): void {
     $input = [
       'HTTP_AUDIENCE' => 'geo:US',
+      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
       'HTTP_ROLE' => 'Administrator',
       'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman',
       'HTTP_IGNORED' => 'HTTP Ignored Entry',
@@ -121,6 +133,9 @@ final class HeaderDataTest extends TestCase
     $this->assertEquals($result['Audience']['geo'], 'US');
     $this->assertEquals($result['Role'], 'Administrator');
     $this->assertArrayNotHasKey('Ignored', $result);
+    // Test the first and last things in the Audience Set array. If we have both, we can assume everything in the middle matches as well.
+    $this->assertEquals($result['Audience-Set']['country'], 'US');
+    $this->assertEquals($result['Audience-Set']['conn-type'], 'wired');
   }
 
   /**
@@ -152,9 +167,9 @@ final class HeaderDataTest extends TestCase
 
   /**
    * Tests the global HeaderData::header() function.
-   * 
+   *
    * @see Pantheon\EI\HeaderData::header()
-   * 
+   *
    * @group headerdata
    */
   public function testGlobalHeader() {
@@ -171,29 +186,33 @@ final class HeaderDataTest extends TestCase
 
   /**
    * Tests the global HeaderData::parse() function.
-   * 
+   *
    * @see Pantheon\EI\HeaderData::parse()
-   * 
+   *
    * @group headerdata
    */
   public function testGlobalParse() {
     // Initialize both the global and an instance as the same input.
     $input = [
       'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
+      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
       'HTTP_IGNORED' => 'HTTP Ignored Entry',
       'IGNORED_ENTRY' => 'Completely ignored entry',
     ];
 
     $audience = HeaderData::parse('Audience', $input);
+    $audienceSet = HeaderData::parse('Audience-Set', $input);
     $this->assertArrayHasKey('Age', $audience);
     $this->assertEquals(47, $audience['Age']);
+    $this->assertArrayHasKey( 'region', $audienceSet );
+    $this->assertEquals( 'UT', $audienceSet['region'] );
   }
 
   /**
    * Tests the global HeaderData::personalizationObject() function.
-   * 
+   *
    * @see Pantheon\EI\HeaderData::personalizationObject()
-   * 
+   *
    * @group headerdata
    */
   public function testGlobalPersonalizationObject() {
@@ -208,9 +227,9 @@ final class HeaderDataTest extends TestCase
 
   /**
    * Tests the global HeaderData::varyHeader() function.
-   * 
+   *
    * @see Pantheon\EI\HeaderData::varyHeader()
-   * 
+   *
    * @group headerdata
    */
   public function testGlobalVaryHeader(): void {

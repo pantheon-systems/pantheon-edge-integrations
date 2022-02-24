@@ -83,6 +83,7 @@ class HeaderData {
             switch ($key) {
                 // Parse Audience header.
                 case 'Audience':
+                case 'Audience-Set':
                   // Separate different pairs in header string.
                     $header_parts = explode('|', $header);
 
@@ -135,6 +136,7 @@ class HeaderData {
 
         $header_keys = [
         'Audience',
+        'Audience-Set',
         'Interest',
         'Role',
         ];
