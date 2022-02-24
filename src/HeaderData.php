@@ -104,6 +104,7 @@ class HeaderData {
                     }
                     break;
 
+                // Parse Interest header.
                 case 'Interest':
                   // Decode special characters.
                     $header_decoded = urldecode($header);
