@@ -14,27 +14,25 @@ composer require pantheon-systems/pantheon-edge-integrations
 
 ## Usage
 
-To make use of the PHP library, ensure PHP can use the class.
+To make use of the PHP library, ensure PHP can use the class. After which, it's possible to etiher call the library through instanced methods, or through the global methods.
 
 ``` php
 use Pantheon\EI\HeaderData;
 ```
 
-Once the class is available, a `headerData` object can be instantiated to make use of the API.
+### Instanced Methods
+
+Once the class is available, `headerData` objects can be instantiated to make use of the API and methods can be called on it.
 
 ``` php
 $headerData = new HeaderData();
 ```
 
-## API
-
-Once a `HeaderData` object is instantiated, it's possible to make calls to the methods within...
-
-### getHeader($key)
+#### getHeader($key)
 
 Uses header key to return raw header data.
 
-### Examples
+##### Examples
 
 ``` php
 $headerData->getHeader('Audience');
@@ -47,11 +45,10 @@ $headerData->getHeader('Role');
 // => "subscriber"
 ```
 
-### parseHeader($key)
+#### parseHeader($key)
 
 Uses header key to return parsed header data array.
 
-### Examples
 ``` php
 $headerData->getHeader('Audience');
 // => [geo => US]
@@ -63,11 +60,10 @@ $headerData->getHeader('Role');
 // => "subscriber"
 ```
 
-### returnPersonalizationObject()
+#### returnPersonalizationObject()
 
 Returns an array with personalization data.
 
-### Examples
 ``` php
 $headerData->returnPersonalizedObject();
 // => [
@@ -77,7 +73,7 @@ $headerData->returnPersonalizedObject();
 //    ]
 ```
 
-### returnVaryHeader($key)
+#### returnVaryHeader($key)
 
 Returns vary header array, based on header data.
 
@@ -85,11 +81,43 @@ Returns vary header array, based on header data.
 
 There are also static methods defined within the class to help assist in retrieving data without having to instantiate the object yourself.
 
+#### HeaderData::personalizationObject()
+
+Gets the global personalizaition object.
+
 ``` php
-HeaderData::personalizationObject()
-HeaderData::parse()
-HeaderData::header()
-HeaderData::returnVaryHeader()
+Pantheon\EI\HeaderData::personalizationObject();
+// => [
+//        Audience => [ geo => US ]
+//        Interest => [ 0 => 27 ]
+//        Role => subscriber
+//    ]
+```
+
+#### HeaderData::parse($key)
+
+Parses a global header by key using a specified regex.
+
+``` php
+Pantheon\EI\HeaderData::parse('Audience');
+// => [geo => US]
+```
+
+#### HeaderData::header($key)
+
+Gets the global header data based on the given key.
+
+``` php
+Pantheon\EI\HeaderData::header('Audience');
+// => geo:US
+```
+
+#### HeaderData::varyHeader()
+
+Returns vary header array based on the global data.
+
+``` php
+Pantheon\EI\HeaderData::varyHeader('geo');
 ```
 
 ## Development
