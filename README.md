@@ -25,14 +25,3 @@ Returns vary header array, based on header data.
 composer install
 composer test
 ```
-
-## Default branch name
-
-The default branch name is `main`. This has changed since the project was created. If your local environment is still using `master` as the default branch name, you may update by running the following commands:
-
-```bash
-git branch -m master <BRANCH>
-git fetch origin
-git branch -u origin/<BRANCH> <BRANCH>
-git remote set-head origin -a
-```
