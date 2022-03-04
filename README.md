@@ -32,8 +32,6 @@ $headerData = new HeaderData();
 
 Uses header key to return raw header data.
 
-##### Examples
-
 ``` php
 $headerData->getHeader('Audience');
 // => "geo:US"
