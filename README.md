@@ -1,6 +1,6 @@
 # Pantheon Edge Integrations
 
-[![Unsupported](https://img.shields.io/badge/pantheon-unsupported-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#unsupported) ![Build Status](https://github.com/pantheon-systems/pantheon-edge-integrations/actions/workflows/main.yml/badge.svg)
+[![Unsupported](https://img.shields.io/badge/pantheon-unsupported-yellow?logo=pantheon&color=FFDC28)](https://pantheon.io/docs/oss-support-levels#unsupported) ![Packagist Release Version](https://img.shields.io/packagist/v/pantheon-systems/pantheon-edge-integrations)![Build Status](https://github.com/pantheon-systems/pantheon-edge-integrations/actions/workflows/main.yml/badge.svg)
 
 Pantheon Edge Integrations is a PHP library which uses header data to provide a personalization object, to be used for personalizing content for each user.
 
