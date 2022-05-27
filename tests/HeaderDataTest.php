@@ -229,12 +229,14 @@ final class HeaderDataTest extends TestCase
     // Initialize both the global and an instance as the same input.
     $input = $this->p13n_input;
 
-    $audience = HeaderData::parse('Audience', $input);
-    $audienceSet = HeaderData::parse('Audience-Set', $input);
-    $this->assertArrayHasKey('Age', $audience);
-    $this->assertEquals(47, $audience['Age']);
-    $this->assertArrayHasKey( 'region', $audienceSet );
-    $this->assertEquals( 'UT', $audienceSet['region'] );
+    $country_code = HeaderData::parse('P13n-Geo-Country-Code', $input);
+    $city = HeaderData::parse('P13n-Geo-City', $input);
+    $region = HeaderData::parse('P13n-Geo-Region', $input);
+    $interest = HeaderData::parse('P13n-Interest', $input);
+    $this->assertEquals('US', $country_code);
+    $this->assertEquals('salt lake city', $city);
+    $this->assertEquals( 'UT', $region );
+    $this->assertContains( 'Jane Goodall', $interest );
   }
 
   /**
