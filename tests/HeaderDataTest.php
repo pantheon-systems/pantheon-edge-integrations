@@ -18,6 +18,25 @@ use Pantheon\EI\HeaderData;
  */
 final class HeaderDataTest extends TestCase
 {
+
+  private $p13n_input = [
+    'HTTP_P13N_GEO_COUNTRY_CODE' => 'US',
+    'HTTP_P13N_GEO_COUNTRY_NAME' => 'united states',
+    'HTTP_P13N_GEO_CITY' => 'salt lake city',
+    'HTTP_P13N_GEO_REGION' => 'UT',
+    'HTTP_P13N_GEO_CONTINENT_CODE' => 'NA',
+    'HTTP_P13N_GEO_CONN_TYPE' => 'wifi',
+    'HTTP_P13N_GEO_CONN_SPEED' => 'broadband',
+    'HTTP_P13N_Interest' => 'Marie Curie|Jane Goodall|Edith Clark||For Science!|With A Percent%20',
+    'HTTP_USER_AGENT' => 'Should just return the value',
+    'HTTP_ROLE' => 'Administrator',
+    'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman||For Science!|With A Percent%20',
+    'HTTP_AUDIENCE' => 'geo:us',
+    'HTTP_AUDIENCE_SET' => 'country:us|city:salt lake city|region:UT|continent:NA|conn_type:wifi|conn_speed:broadband',
+    'HTTP_IGNORED' => 'HTTP Ignored Entry',
+    'IGNORED_ENTRY' => 'Completely ignored entry'
+  ];
+
   /**
    * Tests the HeaderData constructor.
    *
