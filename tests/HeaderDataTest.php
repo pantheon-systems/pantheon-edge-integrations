@@ -122,7 +122,7 @@ final class HeaderDataTest extends TestCase
       'Richard Feynman',
       '',
       'For Science!',
-      'With A Percent20'
+      'With A Percent'
     ];
     $this->assertEquals($interest, $expected);
 
