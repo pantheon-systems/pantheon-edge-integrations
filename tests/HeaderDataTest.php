@@ -85,15 +85,7 @@ final class HeaderDataTest extends TestCase
    * @group headerdata
    */
   public function testParseHeader(): void {
-    // The Audience and Interest entries are parsed into arrays.
-    $input = [
-      'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_USER_AGENT' => 'Should just return the value',
-      'IGNORED TEST' => 'Should return an empty array',
-      'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman||For Science!|With%20A Percent20',
-    ];
-    $headerData = new HeaderData($input);
+    $headerData = new HeaderData($this->p13n_input);
 
     // When a header doesn't exist.
     $keyNotFound = $headerData->parseHeader('header key not found');
@@ -138,15 +130,7 @@ final class HeaderDataTest extends TestCase
    * @group headerdata
    */
   public function testReturnPersonalizationObject(): void {
-    $input = [
-      'HTTP_AUDIENCE' => 'geo:US',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_ROLE' => 'Administrator',
-      'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman',
-      'HTTP_IGNORED' => 'HTTP Ignored Entry',
-      'IGNORED_ENTRY' => 'Completely ignored entry'
-    ];
-    $headerData = new HeaderData($input);
+    $headerData = new HeaderData($this->p13n_input);
     $result = $headerData->returnPersonalizationObject();
 
     $this->assertEquals($result['Audience']['geo'], 'US');
@@ -212,12 +196,7 @@ final class HeaderDataTest extends TestCase
    */
   public function testGlobalParse() {
     // Initialize both the global and an instance as the same input.
-    $input = [
-      'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_IGNORED' => 'HTTP Ignored Entry',
-      'IGNORED_ENTRY' => 'Completely ignored entry',
-    ];
+    $input = $this->p13n_input;
 
     $audience = HeaderData::parse('Audience', $input);
     $audienceSet = HeaderData::parse('Audience-Set', $input);
