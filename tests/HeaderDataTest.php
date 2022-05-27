@@ -137,6 +137,18 @@ final class HeaderDataTest extends TestCase
 
     // User Agent
     $this->assertEquals($headerData->parseHeader('User-Agent'), 'Should just return the value');
+
+    // Backcompat.
+    $audience = $headerData->parseHeader('Audience');
+    $this->assertEquals($audience['geo'], 'us');
+
+    $audience_set = $headerData->parseHeader('Audience-Set');
+    $this->assertEquals($audience_set['country'], 'us');
+    $this->assertEquals($audience_set['city'], 'salt lake city');
+    $this->assertEquals($audience_set['region'], 'UT');
+    $this->assertEquals($audience_set['continent'], 'NA');
+    $this->assertEquals($audience_set['conn_type'], 'wifi');
+    $this->assertEquals($audience_set['conn_speed'], 'broadband');
   }
 
   /**
