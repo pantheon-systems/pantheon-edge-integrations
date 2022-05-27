@@ -89,8 +89,8 @@ final class HeaderDataTest extends TestCase
 
     // When a header doesn't exist.
     $keyNotFound = $headerData->parseHeader('header key not found');
-    $this->assertEmpty($keyNotFound, 'Expected to return an empty array');
-    $this->assertIsArray($keyNotFound, 'Should be an array');
+    $this->assertEmpty($keyNotFound, 'Expected to return an empty string');
+    $this->assertIsString($keyNotFound, 'Should be a string');
 
     // Audience
     $audience = $headerData->parseHeader('Audience');
