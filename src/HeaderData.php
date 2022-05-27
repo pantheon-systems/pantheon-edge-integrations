@@ -90,6 +90,32 @@ class HeaderData {
         if (empty($header)) {
             return $parsed_header;
         }
+
+        // Decode the header.
+        $header_decoded = urldecode($header);
+
+        // Backwards compatibility with Audience and Audience-Set.
+        if (in_array($key, ['Audience','Audience-Set'], true)) {
+            $parsed_header = $this->__deprecatedAudienceHandling($key, $header_decoded);
+            return $parsed_header;
+        }
+
+        // If the header is an interest, or if the value has multiple entries,
+        // allow those entries to be split into an array.
+        if (in_array($key, [ 'Interest', 'P13n-Interest' ], true) ||
+          stripos($header_decoded, '|')
+        ) {
+            $parsed_header = explode('|', $header_decoded);
+            // Trim white space out of values.
+            $parsed_header = array_map('trim', $parsed_header);
+        }
+
+        // If the header is not an interest (e.g. Geo or custom), set the value to the decoded header.
+        if (empty($parsed_header)) {
+            $parsed_header = $header_decoded;
+        }
+
+        return $parsed_header;
     }
 
   /**
