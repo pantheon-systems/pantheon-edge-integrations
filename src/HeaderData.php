@@ -177,10 +177,10 @@ class HeaderData {
         'P13n-Geo-Conn-Type',
         'P13n-Geo-Conn-Speed',
         'P13n-Interest',
-        'Audience',
-        'Audience-Set',
-        'Interest',
-        'Role',
+        'Audience', // Deprecated.
+        'Audience-Set', // Deprecated.
+        'Interest', // Deprecated.
+        'Role', // Not implemented.
         ];
 
         foreach ($header_keys as $key) {
