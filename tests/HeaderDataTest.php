@@ -92,22 +92,28 @@ final class HeaderDataTest extends TestCase
     $this->assertEmpty($keyNotFound, 'Expected to return an empty string');
     $this->assertIsString($keyNotFound, 'Should be a string');
 
-    // Audience
-    $audience = $headerData->parseHeader('Audience');
-    $this->assertIsArray($audience['Audience']);
-    $this->assertEquals($audience['Audience'][1], 'Children');
-    $this->assertEquals($audience['Name'], 'AnnaMykhailova'); // Take the last entry.
-    $this->assertEquals($audience['Age'], 47);
-
-    // Audience Set
-    $audienceSet = $headerData->parseHeader('Audience-Set');
-    $this->assertIsArray($audienceSet);
-    $this->assertEquals($audienceSet['country'], 'US');
-    $this->assertEquals($audienceSet['city'], 'Salt Lake City');
-    $this->assertEquals($audienceSet['region'], 'UT');
-    $this->assertEquals($audienceSet['continent'], 'NA');
-    $this->assertEquals($audienceSet['conn-speed'], 'broadband');
-    $this->assertEquals($audienceSet['conn-type'], 'wired');
+    // Geolocation.
+    $country_code = $headerData->parseHeader('P13n-Geo-Country-Code');
+    $this->assertIsString($country_code, 'Should be a string');
+    $this->assertEquals($country_code, 'US');
+    $country_name = $headerData->parseHeader('P13n-Geo-Country-Name');
+    $this->assertIsString($country_name, 'Should be a string');
+    $this->assertEquals($country_name, 'united states');
+    $city = $headerData->parseHeader('P13n-Geo-City');
+    $this->assertIsString($city, 'Should be a string');
+    $this->assertEquals($city, 'salt lake city');
+    $region = $headerData->parseHeader('P13n-Geo-Region');
+    $this->assertIsString($region, 'Should be a string');
+    $this->assertEquals($region, 'UT');
+    $continent_code = $headerData->parseHeader('P13n-Geo-Continent-Code');
+    $this->assertIsString($continent_code, 'Should be a string');
+    $this->assertEquals($continent_code, 'NA');
+    $conn_type = $headerData->parseHeader('P13n-Geo-Conn-Type');
+    $this->assertIsString($conn_type, 'Should be a string');
+    $this->assertEquals($conn_type, 'wifi');
+    $conn_speed = $headerData->parseHeader('P13n-Geo-Conn-Speed');
+    $this->assertIsString($conn_speed, 'Should be a string');
+    $this->assertEquals($conn_speed, 'broadband');
 
     // Interest
     $interest = $headerData->parseHeader('Interest');
