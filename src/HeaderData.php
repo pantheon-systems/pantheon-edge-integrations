@@ -82,8 +82,9 @@ class HeaderData {
    *   Returns important parts of header string.
    */
     public function parseHeader($key) {
-      // Get specified header.
+        // Get specified header.
         $header = $this->getHeader($key);
+        $parsed_header = in_array($key, [ 'Interest', 'P13n-Interest' ], true)? [] : '';
 
         if (!empty($header)) {
             $parsed_header = [];
