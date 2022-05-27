@@ -125,6 +125,15 @@ final class HeaderDataTest extends TestCase
       'With A Percent'
     ];
     $this->assertEquals($interest, $expected);
+    $p13n_interest = $headerData->parseHeader('P13n-Interest');
+    $this->assertEquals($p13n_interest, [
+      'Marie Curie',
+      'Jane Goodall',
+      'Edith Clark',
+      '',
+      'For Science!',
+      'With A Percent'
+    ]);
 
     // User Agent
     $this->assertEquals($headerData->parseHeader('User-Agent'), 'Should just return the value');
