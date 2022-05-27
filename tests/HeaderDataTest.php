@@ -159,13 +159,17 @@ final class HeaderDataTest extends TestCase
   public function testReturnPersonalizationObject(): void {
     $headerData = new HeaderData($this->p13n_input);
     $result = $headerData->returnPersonalizationObject();
-
-    $this->assertEquals($result['Audience']['geo'], 'US');
+    $this->assertEquals($result['P13n-Geo-Country-Code'], 'US');
+    $this->assertEquals($result['P13n-Geo-Country-Name'], 'united states');
+    $this->assertEquals($result['P13n-Geo-City'], 'salt lake city');
+    $this->assertEquals($result['P13n-Geo-Region'], 'UT');
+    $this->assertEquals($result['P13n-Geo-Continent-Code'], 'NA');
+    $this->assertEquals($result['P13n-Geo-Conn-Type'], 'wifi');
+    $this->assertEquals($result['P13n-Geo-Conn-Speed'], 'broadband');
+    $this->assertIsArray($result['P13n-Interest']);
+    $this->assertContains('Edith Clark',$result['P13n-Interest']);
     $this->assertEquals($result['Role'], 'Administrator');
     $this->assertArrayNotHasKey('Ignored', $result);
-    // Test the first and last things in the Audience Set array. If we have both, we can assume everything in the middle matches as well.
-    $this->assertEquals($result['Audience-Set']['country'], 'US');
-    $this->assertEquals($result['Audience-Set']['conn-type'], 'wired');
   }
 
   /**
