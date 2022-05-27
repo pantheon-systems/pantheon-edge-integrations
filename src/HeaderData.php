@@ -1,4 +1,11 @@
 <?php
+/**
+ * HeaderData Class
+ *
+ * Handles interactions with headers sent from Fastly to the application.
+ *
+ * @package Pantheon\EI\HeaderData
+ */
 
 declare(strict_types = 1);
 
