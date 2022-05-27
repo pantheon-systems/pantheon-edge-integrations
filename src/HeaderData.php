@@ -86,8 +86,10 @@ class HeaderData {
         $header = $this->getHeader($key);
         $parsed_header = in_array($key, [ 'Interest', 'P13n-Interest' ], true)? [] : '';
 
-        if (!empty($header)) {
-            $parsed_header = [];
+        // If the header is empty, bail early.
+        if (empty($header)) {
+            return $parsed_header;
+        }
             switch ($key) {
                 // Parse Audience header.
                 case 'Audience':
