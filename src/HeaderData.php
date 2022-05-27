@@ -169,6 +169,14 @@ class HeaderData {
         $p_obj = [];
 
         $header_keys = [
+        'P13n-Geo-Region',
+        'P13n-Geo-Country-Code',
+        'P13n-Geo-Country-Name',
+        'P13n-Geo-Continent-Code',
+        'P13n-Geo-City',
+        'P13n-Geo-Conn-Type',
+        'P13n-Geo-Conn-Speed',
+        'P13n-Interest',
         'Audience',
         'Audience-Set',
         'Interest',
