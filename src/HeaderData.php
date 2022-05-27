@@ -90,49 +90,47 @@ class HeaderData {
         if (empty($header)) {
             return $parsed_header;
         }
-            switch ($key) {
-                // Parse Audience header.
-                case 'Audience':
-                case 'Audience-Set':
-                  // Separate different pairs in header string.
-                    $header_parts = explode('|', $header);
+    }
 
-                    foreach ($header_parts as $header_part) {
-                        // Skip if empty.
-                        if (empty($header_part)) {
-                            continue;
-                        }
+  /**
+   * Handles deprecated Audience and Audience-Set headers.
+   * @param string $key The header key. Either 'Audience' or 'Audience-Set'.
+   * @param string $header The header value.
+   * @return array
+   *  Returns an array of audience data.
+   * @deprecated
+   *  This function is deprecated and will be removed in a future release.
+   */
+    public function __deprecatedAudienceHandling(string $key, string $header) : array {
+        $parsed_header = [];
 
-                        // Separate the pair string into key and value.
-                        $header_pair = explode(':', $header_part);
-                        if (count($header_pair) >= 2) {
-                            $parsed_header[$header_pair[0]] = $header_pair[1];
-                        } else {
-                            // If string isn't formatted as a pair, just set string.
-                            $parsed_header[$key][] = $header_part;
-                        }
-                    }
-                    break;
-
-                // Parse Interest header.
-                case 'Interest':
-                  // Decode special characters.
-                    $header_decoded = urldecode($header);
-
-                  // Split header value into an array.
-                    $parsed_header = explode('|', $header_decoded);
-                    break;
-
-                // By default, just return header.
-                default:
-                    $parsed_header = $header;
-                    break;
-            }
-
-            return $parsed_header;
+        // If we're dealing with an Audience header, we need to add it to an array.
+        if ($key === 'Audience') {
+            $_headers = [$header];
         }
 
-        return [];
+        // Split the header data at the | character.
+        $_headers = explode('|', $header);
+
+        // Loop through each header.
+        foreach ($_headers as $i => $header_part) {
+            // If the header is empty, bail early.
+            if (empty($header_part)) {
+                continue;
+            }
+
+            // Split at the : character.
+            $header_pair = explode(':', $header_part);
+            // If we actually have a header pair, map the key and value.
+            // Otherwise, just return the value for the passed key.
+            if (count($header_pair) >= 2) {
+                $parsed_header[$header_pair[0]] = $header_pair[1];
+            } else {
+                $parsed_header[$key] = $header_part;
+            }
+        }
+
+        return $parsed_header;
     }
 
   /**
