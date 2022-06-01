@@ -18,6 +18,25 @@ use Pantheon\EI\HeaderData;
  */
 final class HeaderDataTest extends TestCase
 {
+
+  private $p13n_input = [
+    'HTTP_P13N_GEO_COUNTRY_CODE' => 'US',
+    'HTTP_P13N_GEO_COUNTRY_NAME' => 'united states',
+    'HTTP_P13N_GEO_CITY' => 'salt lake city',
+    'HTTP_P13N_GEO_REGION' => 'UT',
+    'HTTP_P13N_GEO_CONTINENT_CODE' => 'NA',
+    'HTTP_P13N_GEO_CONN_TYPE' => 'wifi',
+    'HTTP_P13N_GEO_CONN_SPEED' => 'broadband',
+    'HTTP_P13N_Interest' => 'Marie Curie|Jane Goodall|Edith Clark||For Science!|With A Percent%20',
+    'HTTP_USER_AGENT' => 'Should just return the value',
+    'HTTP_ROLE' => 'Administrator',
+    'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman||For Science!|With A Percent%20',
+    'HTTP_AUDIENCE' => 'geo:us',
+    'HTTP_AUDIENCE_SET' => 'country:us|city:salt lake city|region:UT|continent:NA|conn_type:wifi|conn_speed:broadband',
+    'HTTP_IGNORED' => 'HTTP Ignored Entry',
+    'IGNORED_ENTRY' => 'Completely ignored entry'
+  ];
+
   /**
    * Tests the HeaderData constructor.
    *
@@ -66,37 +85,35 @@ final class HeaderDataTest extends TestCase
    * @group headerdata
    */
   public function testParseHeader(): void {
-    // The Audience and Interest entries are parsed into arrays.
-    $input = [
-      'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_USER_AGENT' => 'Should just return the value',
-      'IGNORED TEST' => 'Should return an empty array',
-      'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman||For Science!|With%20A Percent20',
-    ];
-    $headerData = new HeaderData($input);
+    $headerData = new HeaderData($this->p13n_input);
 
     // When a header doesn't exist.
     $keyNotFound = $headerData->parseHeader('header key not found');
-    $this->assertEmpty($keyNotFound, 'Expected to return an empty array');
-    $this->assertIsArray($keyNotFound, 'Should be an array');
+    $this->assertEmpty($keyNotFound, 'Expected to return an empty string');
+    $this->assertIsString($keyNotFound, 'Should be a string');
 
-    // Audience
-    $audience = $headerData->parseHeader('Audience');
-    $this->assertIsArray($audience['Audience']);
-    $this->assertEquals($audience['Audience'][1], 'Children');
-    $this->assertEquals($audience['Name'], 'AnnaMykhailova'); // Take the last entry.
-    $this->assertEquals($audience['Age'], 47);
-
-    // Audience Set
-    $audienceSet = $headerData->parseHeader('Audience-Set');
-    $this->assertIsArray($audienceSet);
-    $this->assertEquals($audienceSet['country'], 'US');
-    $this->assertEquals($audienceSet['city'], 'Salt Lake City');
-    $this->assertEquals($audienceSet['region'], 'UT');
-    $this->assertEquals($audienceSet['continent'], 'NA');
-    $this->assertEquals($audienceSet['conn-speed'], 'broadband');
-    $this->assertEquals($audienceSet['conn-type'], 'wired');
+    // Geolocation.
+    $country_code = $headerData->parseHeader('P13n-Geo-Country-Code');
+    $this->assertIsString($country_code, 'Should be a string');
+    $this->assertEquals($country_code, 'US');
+    $country_name = $headerData->parseHeader('P13n-Geo-Country-Name');
+    $this->assertIsString($country_name, 'Should be a string');
+    $this->assertEquals($country_name, 'united states');
+    $city = $headerData->parseHeader('P13n-Geo-City');
+    $this->assertIsString($city, 'Should be a string');
+    $this->assertEquals($city, 'salt lake city');
+    $region = $headerData->parseHeader('P13n-Geo-Region');
+    $this->assertIsString($region, 'Should be a string');
+    $this->assertEquals($region, 'UT');
+    $continent_code = $headerData->parseHeader('P13n-Geo-Continent-Code');
+    $this->assertIsString($continent_code, 'Should be a string');
+    $this->assertEquals($continent_code, 'NA');
+    $conn_type = $headerData->parseHeader('P13n-Geo-Conn-Type');
+    $this->assertIsString($conn_type, 'Should be a string');
+    $this->assertEquals($conn_type, 'wifi');
+    $conn_speed = $headerData->parseHeader('P13n-Geo-Conn-Speed');
+    $this->assertIsString($conn_speed, 'Should be a string');
+    $this->assertEquals($conn_speed, 'broadband');
 
     // Interest
     $interest = $headerData->parseHeader('Interest');
@@ -105,12 +122,33 @@ final class HeaderDataTest extends TestCase
       'Richard Feynman',
       '',
       'For Science!',
-      'With A Percent20'
+      'With A Percent'
     ];
     $this->assertEquals($interest, $expected);
+    $p13n_interest = $headerData->parseHeader('P13n-Interest');
+    $this->assertEquals($p13n_interest, [
+      'Marie Curie',
+      'Jane Goodall',
+      'Edith Clark',
+      '',
+      'For Science!',
+      'With A Percent'
+    ]);
 
     // User Agent
     $this->assertEquals($headerData->parseHeader('User-Agent'), 'Should just return the value');
+
+    // Backcompat.
+    $audience = $headerData->parseHeader('Audience');
+    $this->assertEquals($audience['geo'], 'us');
+
+    $audience_set = $headerData->parseHeader('Audience-Set');
+    $this->assertEquals($audience_set['country'], 'us');
+    $this->assertEquals($audience_set['city'], 'salt lake city');
+    $this->assertEquals($audience_set['region'], 'UT');
+    $this->assertEquals($audience_set['continent'], 'NA');
+    $this->assertEquals($audience_set['conn_type'], 'wifi');
+    $this->assertEquals($audience_set['conn_speed'], 'broadband');
   }
 
   /**
@@ -119,23 +157,19 @@ final class HeaderDataTest extends TestCase
    * @group headerdata
    */
   public function testReturnPersonalizationObject(): void {
-    $input = [
-      'HTTP_AUDIENCE' => 'geo:US',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_ROLE' => 'Administrator',
-      'HTTP_INTEREST' => 'Carl Sagan|Richard Feynman',
-      'HTTP_IGNORED' => 'HTTP Ignored Entry',
-      'IGNORED_ENTRY' => 'Completely ignored entry'
-    ];
-    $headerData = new HeaderData($input);
+    $headerData = new HeaderData($this->p13n_input);
     $result = $headerData->returnPersonalizationObject();
-
-    $this->assertEquals($result['Audience']['geo'], 'US');
+    $this->assertEquals($result['P13n-Geo-Country-Code'], 'US');
+    $this->assertEquals($result['P13n-Geo-Country-Name'], 'united states');
+    $this->assertEquals($result['P13n-Geo-City'], 'salt lake city');
+    $this->assertEquals($result['P13n-Geo-Region'], 'UT');
+    $this->assertEquals($result['P13n-Geo-Continent-Code'], 'NA');
+    $this->assertEquals($result['P13n-Geo-Conn-Type'], 'wifi');
+    $this->assertEquals($result['P13n-Geo-Conn-Speed'], 'broadband');
+    $this->assertIsArray($result['P13n-Interest']);
+    $this->assertContains('Edith Clark',$result['P13n-Interest']);
     $this->assertEquals($result['Role'], 'Administrator');
     $this->assertArrayNotHasKey('Ignored', $result);
-    // Test the first and last things in the Audience Set array. If we have both, we can assume everything in the middle matches as well.
-    $this->assertEquals($result['Audience-Set']['country'], 'US');
-    $this->assertEquals($result['Audience-Set']['conn-type'], 'wired');
   }
 
   /**
@@ -193,19 +227,16 @@ final class HeaderDataTest extends TestCase
    */
   public function testGlobalParse() {
     // Initialize both the global and an instance as the same input.
-    $input = [
-      'HTTP_AUDIENCE' => 'Parents|Children||Age:47|Name:RobLoach|Name:StevePersch|Name:AnnaMykhailova',
-      'HTTP_AUDIENCE_SET' => 'country:US|city:Salt Lake City|region:UT|continent:NA|conn-speed:broadband|conn-type:wired',
-      'HTTP_IGNORED' => 'HTTP Ignored Entry',
-      'IGNORED_ENTRY' => 'Completely ignored entry',
-    ];
+    $input = $this->p13n_input;
 
-    $audience = HeaderData::parse('Audience', $input);
-    $audienceSet = HeaderData::parse('Audience-Set', $input);
-    $this->assertArrayHasKey('Age', $audience);
-    $this->assertEquals(47, $audience['Age']);
-    $this->assertArrayHasKey( 'region', $audienceSet );
-    $this->assertEquals( 'UT', $audienceSet['region'] );
+    $country_code = HeaderData::parse('P13n-Geo-Country-Code', $input);
+    $city = HeaderData::parse('P13n-Geo-City', $input);
+    $region = HeaderData::parse('P13n-Geo-Region', $input);
+    $interest = HeaderData::parse('P13n-Interest', $input);
+    $this->assertEquals('US', $country_code);
+    $this->assertEquals('salt lake city', $city);
+    $this->assertEquals( 'UT', $region );
+    $this->assertContains( 'Jane Goodall', $interest );
   }
 
   /**

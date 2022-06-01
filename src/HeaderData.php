@@ -1,4 +1,11 @@
 <?php
+/**
+ * HeaderData Class
+ *
+ * Handles interactions with headers sent from Fastly to the application.
+ *
+ * @package Pantheon\EI\HeaderData
+ */
 
 declare(strict_types = 1);
 
@@ -75,54 +82,81 @@ class HeaderData {
    *   Returns important parts of header string.
    */
     public function parseHeader($key) {
-      // Get specified header.
+        // Get specified header.
         $header = $this->getHeader($key);
+        $parsed_header = in_array($key, [ 'Interest', 'P13n-Interest' ], true)? [] : '';
 
-        if (!empty($header)) {
-            $parsed_header = [];
-            switch ($key) {
-                // Parse Audience header.
-                case 'Audience':
-                case 'Audience-Set':
-                  // Separate different pairs in header string.
-                    $header_parts = explode('|', $header);
-
-                    foreach ($header_parts as $header_part) {
-                        // Skip if empty.
-                        if (empty($header_part)) {
-                            continue;
-                        }
-
-                        // Separate the pair string into key and value.
-                        $header_pair = explode(':', $header_part);
-                        if (count($header_pair) >= 2) {
-                            $parsed_header[$header_pair[0]] = $header_pair[1];
-                        } else {
-                            // If string isn't formatted as a pair, just set string.
-                            $parsed_header[$key][] = $header_part;
-                        }
-                    }
-                    break;
-
-                // Parse Interest header.
-                case 'Interest':
-                  // Decode special characters.
-                    $header_decoded = urldecode($header);
-
-                  // Split header value into an array.
-                    $parsed_header = explode('|', $header_decoded);
-                    break;
-
-                // By default, just return header.
-                default:
-                    $parsed_header = $header;
-                    break;
-            }
-
+        // If the header is empty, bail early.
+        if (empty($header)) {
             return $parsed_header;
         }
 
-        return [];
+        // Decode the header.
+        $header_decoded = urldecode($header);
+
+        // Backwards compatibility with Audience and Audience-Set.
+        if (in_array($key, ['Audience','Audience-Set'], true)) {
+            $parsed_header = $this->__deprecatedAudienceHandling($key, $header_decoded);
+            return $parsed_header;
+        }
+
+        // If the header is an interest, or if the value has multiple entries,
+        // allow those entries to be split into an array.
+        if (in_array($key, [ 'Interest', 'P13n-Interest' ], true) ||
+          stripos($header_decoded, '|')
+        ) {
+            $parsed_header = explode('|', $header_decoded);
+            // Trim white space out of values.
+            $parsed_header = array_map('trim', $parsed_header);
+        }
+
+        // If the header is not an interest (e.g. Geo or custom), set the value to the decoded header.
+        if (empty($parsed_header)) {
+            $parsed_header = $header_decoded;
+        }
+
+        return $parsed_header;
+    }
+
+  /**
+   * Handles deprecated Audience and Audience-Set headers.
+   * @param string $key The header key. Either 'Audience' or 'Audience-Set'.
+   * @param string $header The header value.
+   * @return array
+   *  Returns an array of audience data.
+   * @deprecated
+   *  This function is deprecated and will be removed in a future release.
+   */
+    public function __deprecatedAudienceHandling(string $key, string $header) : array {
+        $parsed_header = [];
+
+        // If we're dealing with an Audience header, we need to add it to an array.
+        if ($key === 'Audience') {
+            $_headers = [$header];
+        }
+
+        // Split the header data at the | character.
+        $_headers = explode('|', $header);
+
+        // Loop through each header.
+        foreach ($_headers as $i => $header_part) {
+            // If the header is empty, bail early.
+            if (empty($header_part)) {
+                continue;
+            }
+
+            // Split at the : character.
+            $header_pair = explode(':', $header_part);
+            // If we actually have a header pair, map the key and value.
+            // Otherwise, just return the value for the passed key.
+            if (count($header_pair) >= 2) {
+                $parsed_header[$header_pair[0]] = $header_pair[1];
+            } else {
+                $parsed_header[$key] = $header_part;
+            }
+        }
+
+        return $parsed_header;
     }
 
   /**
@@ -135,10 +169,18 @@ class HeaderData {
         $p_obj = [];
 
         $header_keys = [
-        'Audience',
-        'Audience-Set',
-        'Interest',
-        'Role',
+        'P13n-Geo-Region',
+        'P13n-Geo-Country-Code',
+        'P13n-Geo-Country-Name',
+        'P13n-Geo-Continent-Code',
+        'P13n-Geo-City',
+        'P13n-Geo-Conn-Type',
+        'P13n-Geo-Conn-Speed',
+        'P13n-Interest',
+        'Audience', // Deprecated.
+        'Audience-Set', // Deprecated.
+        'Interest', // Deprecated.
+        'Role', // Not implemented.
         ];
 
         foreach ($header_keys as $key) {
