@@ -13,10 +13,6 @@ jobs:
       run: |
         composer install
 
-    - name: composer lint
-      run: |
-        composer lint
-
     - name: composer test
       run: |
         composer test

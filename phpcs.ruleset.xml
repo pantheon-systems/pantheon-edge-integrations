@@ -8,5 +8,6 @@
 		<!-- Ignore the brace on a new line sniff. -->
 		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
 		<exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+		<exclude name="Generic.Files.LineLength"/>
 	</rule>
 </ruleset>
