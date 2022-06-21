@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+namespace Pantheon\EI;
+
 use PHPUnit\Framework\TestCase;
 use Pantheon\EI\HeaderData;
 
@@ -18,7 +20,6 @@ use Pantheon\EI\HeaderData;
  */
 final class HeaderDataTest extends TestCase
 {
-
   private $p13n_input = [
     'HTTP_P13N_GEO_COUNTRY_CODE' => 'US',
     'HTTP_P13N_GEO_COUNTRY_NAME' => 'united states',

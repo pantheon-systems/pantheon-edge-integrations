@@ -12,11 +12,18 @@
     }
   },
   "scripts": {
-    "lint:phpcbf": "vendor/bin/phpcbf -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
-    "lint:php": "find src/ -name '*.php' -exec php -l {} \\;",
-    "lint:phpcs": "vendor/bin/phpcs -s --standard=phpcs.ruleset.xml --extensions=php ./src/",
-    "lint": "composer lint:php && composer lint:phpcs",
-    "test": "vendor/bin/phpunit -c phpunit.xml"
+    "lint:phpcbf": "vendor/bin/phpcbf -s --standard=phpcs.ruleset.xml --extensions=php ./src/ ./tests",
+    "lint:php": "find src/ tests/ -name '*.php' -exec php -l {} \\;",
+    "lint:phpcs": "vendor/bin/phpcs -s --standard=phpcs.ruleset.xml --extensions=php ./src/ ./tests",
+    "lint": [
+      "@composer lint:php",
+      "@composer lint:phpcs"
+    ],
+    "test:phpunit": "vendor/bin/phpunit -c phpunit.xml",
+    "test": [
+      "@composer test:phpunit",
+      "@composer lint"
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
